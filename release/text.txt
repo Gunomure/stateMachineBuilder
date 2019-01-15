@@ -1,0 +1,31 @@
+<root>: Kernel/StateMachines
+Uniteller.CrossroadController
+  States                  ; Состояния
+    Start
+      IsEndState  : False ; Состояние не является конечным
+      Transitions : 1     ; Переходы (с накоплением событий)
+        Kernel.Start : Pause
+    End
+      IsEndState  : True  ; Состояние является конечным
+      Transitions : 0     ; Переходы (без накопления событий)
+    Pause
+      IsEndState  : False ; Состояние не является конечным
+      Transitions : 0     ; Переходы (без накопления событий)
+        Kernel.Stop : End
+    CarYellow
+      IsEndState  : False ; Состояние не является конечным
+      TimeOut     : 5000 ; Максимальный интервал нахождения в данном состоянии
+      Transitions : 0     ; Переходы (без накопления событий)
+        MainLogic.Shutdown : Start
+        Kernel.Stop : End
+    SwitchGreenToYellow
+      IsEndState  : False ; Состояние не является конечным
+      TimeOut     : 2000 ; Максимальный интервал нахождения в данном состоянии
+      Transitions : 0     ; Переходы (без накопления событий)
+        Kernel.TimeOut : Pause
+        CrosswalkController.Success : CarYellow
+        MainLogic.Shutdown : End
+          CanRaise : 1    ; Ограничиваем события, которые могут быть сгенерированы модулем в момент перехода
+            CrosswalkController.AllSuccessRaise
+  Options                 ; Настройки машины
+    StartState : Start

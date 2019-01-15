@@ -1,0 +1,80 @@
+<root>: Kernel/StateMachines
+Uniteller.CrossroadController
+States ; Состояния
+IDLE
+IsEndState : False ; Состояние не является конечным
+Transitions : 1 ; Переходы (с накоплением событий)
+MainLogic.Start : Started
+Stop
+IsEndState : True ; Состояние является конечным
+Transitions : 0 ; Переходы (без накопления событий)
+Started
+IsEndState : False ; Состояние не является конечным
+Transitions : 0 ; Переходы (без накопления событий)
+DeviceController.SetLight : Yellow1000
+CanRaise : 1 ; Ограничиваем события, которые могут быть сгенерированы модулем в момент перехода
+DeviceController.SetState
+DeviceController.GetState
+Yellow1000
+IsEndState : False ; Состояние не является конечным
+TimeOut : 1000 ; Максимальный интервал нахождения в данном состоянии
+Transitions : 0 ; Переходы (без накопления событий)
+Kernel.TimeOut : NoSignal
+CanRaise : 1 ; Ограничиваем события, которые могут быть сгенерированы модулем в момент перехода
+DeviceController.UnSetLight
+DeviceController.SetState
+DeviceController.GetState
+DeviceController.SetLight : Green
+CanRaise : 1 ; Ограничиваем события, которые могут быть сгенерированы модулем в момент перехода
+DeviceController.SetState
+DeviceController.GetState
+Green
+IsEndState : False ; Состояние не является конечным
+TimeOut : 40000 ; Максимальный интервал нахождения в данном состоянии
+Transitions : 0 ; Переходы (без накопления событий)
+Kernel.TimeOut : Yellow4000
+CanRaise : 1 ; Ограничиваем события, которые могут быть сгенерированы модулем в момент перехода
+DeviceController.SetLight
+DeviceController.SetState
+DeviceController.GetState
+DeviceController.UnSetLight : NoSignal
+CanRaise : 1 ; Ограничиваем события, которые могут быть сгенерированы модулем в момент перехода
+DeviceController.SetState
+DeviceController.GetState
+Red
+IsEndState : False ; Состояние не является конечным
+TimeOut : 30000 ; Максимальный интервал нахождения в данном состоянии
+4
+Transitions : 0 ; Переходы (без накопления событий)
+Kernel.TimeOut : Green
+CanRaise : 1 ; Ограничиваем события, которые могут быть сгенерированы модулем в момент перехода
+DeviceController.SetLight
+DeviceController.SetState
+DeviceController.GetState
+DeviceController.UnSetLight : NoSignal
+CanRaise : 1 ; Ограничиваем события, которые могут быть сгенерированы модулем в момент перехода
+DeviceController.SetState
+DeviceController.GetState
+Yellow4000
+IsEndState : False ; Состояние не является конечным
+TimeOut : 4000 ; Максимальный интервал нахождения в данном состоянии
+Transitions : 0 ; Переходы (без накопления событий)
+DeviceController.UnSetLight : NoSignal
+CanRaise : 1 ; Ограничиваем события, которые могут быть сгенерированы модулем в момент перехода
+DeviceController.SetState
+DeviceController.GetState
+Kernel.TimeOut : Red
+CanRaise : 1 ; Ограничиваем события, которые могут быть сгенерированы модулем в момент перехода
+DeviceController.SetLight
+DeviceController.SetState
+DeviceController.GetState
+NoSignal
+IsEndState : False ; Состояние не является конечным
+Transitions : 0 ; Переходы (без накопления событий)
+Kernel.Stop : Stop
+DeviceController.SetLight : Yellow1000
+CanRaise : 1 ; Ограничиваем события, которые могут быть сгенерированы модулем в момент перехода
+DeviceController.SetState
+DeviceController.GetState
+Options ; Настройки машины
+StartState : IDLE

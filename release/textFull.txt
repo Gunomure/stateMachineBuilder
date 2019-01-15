@@ -1,0 +1,75 @@
+<root>: Kernel/StateMachines
+Uniteller.CrossroadController
+  States                  ; Ninoiyiey
+    Start
+      IsEndState  : False ; Ninoiyiea ia yaeyaony eiia?iui
+      Transitions : 1     ; Ia?aoiau (n iaeiieaieai niauoee)
+        Kernel.Start : Pause
+    End
+      IsEndState  : True  ; Ninoiyiea yaeyaony eiia?iui
+      Transitions : 0     ; Ia?aoiau (aac iaeiieaiey niauoee)
+    Pause
+      IsEndState  : False ; Ninoiyiea ia yaeyaony eiia?iui
+      Transitions : 0     ; Ia?aoiau (aac iaeiieaiey niauoee)
+        Kernel.Stop : End
+        MainLogic.Start : CarGreen
+        MainLogic.Shutdown : End
+    CarYellow
+      IsEndState  : False ; Ninoiyiea ia yaeyaony eiia?iui
+      TimeOut     : 5000 ; Iaeneiaeuiue eioa?aae iaoi?aaiey a aaiiii ninoiyiee
+      Transitions : 0     ; Ia?aoiau (aac iaeiieaiey niauoee)
+        Kernel.TimeOut : SwitchYellowToRed
+        MainLogic.Shutdown : End
+        Kernel.Stop : End
+    SwitchGreenToYellow
+      IsEndState  : False ; Ninoiyiea ia yaeyaony eiia?iui
+      TimeOut     : 2000 ; Iaeneiaeuiue eioa?aae iaoi?aaiey a aaiiii ninoiyiee
+      Transitions : 0     ; Ia?aoiau (aac iaeiieaiey niauoee)
+        Kernel.TimeOut : Pause
+        DeviceController.Fail : Pause
+        CrosswalkController.AllSuccess : CarYellow
+        MainLogic.Shutdown : End
+        DeviceController.Success : SwitchGreenToYellow
+          CanRaise : 1    ; Ia?aie?eaaai niauoey, eioi?ua iiaoo auou naaia?e?iaaiu iiaoeai a iiiaio ia?aoiaa
+            CrosswalkController.AllSuccess
+        Kernel.Stop : End
+    CarGreen
+      IsEndState  : False ; Ninoiyiea ia yaeyaony eiia?iui
+      TimeOut     : 180000 ; Iaeneiaeuiue eioa?aae iaoi?aaiey a aaiiii ninoiyiee
+      Transitions : 0     ; Ia?aoiau (aac iaeiieaiey niauoee)
+        Kernel.TimeOut : SwitchGreenToYellow
+        MainLogic.Shutdown : End
+        Kernel.Stop : End
+    SwitchRedToGreen
+      IsEndState  : False ; Ninoiyiea ia yaeyaony eiia?iui
+      TimeOut     : 2000 ; Iaeneiaeuiue eioa?aae iaoi?aaiey a aaiiii ninoiyiee
+      Transitions : 0     ; Ia?aoiau (aac iaeiieaiey niauoee)
+        Kernel.TimeOut : Pause
+        DeviceController.Fail : Pause
+        DeviceController.Success : SwitchRedToGreen
+          CanRaise : 1    ; Ia?aie?eaaai niauoey, eioi?ua iiaoo auou naaia?e?iaaiu iiaoeai a iiiaio ia?aoiaa
+            CrosswalkController.AllSuccess
+        CrosswalkController.AllSuccess : CarGreen
+        MainLogic.Shutdown : End
+        Kernel.Stop : End
+    CarRed
+      IsEndState  : False ; Ninoiyiea ia yaeyaony eiia?iui
+      TimeOut     : 30000 ; Iaeneiaeuiue eioa?aae iaoi?aaiey a aaiiii ninoiyiee
+      Transitions : 0     ; Ia?aoiau (aac iaeiieaiey niauoee)
+        Kernel.TimeOut : SwitchRedToGreen
+        MainLogic.Shutdown : End
+        Kernel.Stop : End
+    SwitchYellowToRed
+      IsEndState  : False ; Ninoiyiea ia yaeyaony eiia?iui
+      TimeOut     : 2000 ; Iaeneiaeuiue eioa?aae iaoi?aaiey a aaiiii ninoiyiee
+      Transitions : 0     ; Ia?aoiau (aac iaeiieaiey niauoee)
+        Kernel.TimeOut : Pause
+        CrosswalkController.AllSuccess : CarRed
+        DeviceController.Fail : Pause
+        DeviceController.Success : SwitchYellowToRed
+          CanRaise : 1    ; Ia?aie?eaaai niauoey, eioi?ua iiaoo auou naaia?e?iaaiu iiaoeai a iiiaio ia?aoiaa
+            CrosswalkController.AllSuccess
+        MainLogic.Shutdown : End
+        Kernel.Stop : End
+  Options                 ; Iano?ieee iaoeiu
+    StartState : Start
